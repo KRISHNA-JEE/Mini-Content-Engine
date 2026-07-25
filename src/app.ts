@@ -23,3 +23,4 @@ app.use(generateRouter);
 app.use(jobsRouter);
 
 export { app };
+export default app;
