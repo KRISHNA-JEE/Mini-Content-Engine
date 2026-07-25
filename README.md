@@ -145,10 +145,11 @@ currently expects a long-lived server process.
 
 1. Push this repo to GitHub.
 2. Create a Vercel project from the repo.
-3. Add environment variables in Vercel:
+3. Add environment variables in the Vercel dashboard (not just in your local `.env` file):
    - `DATABASE_URL`
    - `DATABASE_SSL=true`
    - `GROQ_API_KEY`
+  - Make sure the `DATABASE_URL` is the live Neon connection string for production.
 4. Deploy from Vercel.
 5. Verify:
   - `GET /health` returns `{ "status": "ok" }`

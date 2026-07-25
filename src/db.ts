@@ -74,3 +74,16 @@ export async function initSchema(): Promise<void> {
   await pool.query(SCHEMA_SQL);
   await pool.query(MIGRATION_SQL);
 }
+
+let schemaInitPromise: Promise<void> | null = null;
+
+export async function ensureSchema(): Promise<void> {
+  if (!schemaInitPromise) {
+    schemaInitPromise = initSchema().catch((err) => {
+      schemaInitPromise = null;
+      throw err;
+    });
+  }
+
+  return schemaInitPromise;
+}

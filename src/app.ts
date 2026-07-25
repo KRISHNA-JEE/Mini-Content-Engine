@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import path from "path";
-import { initSchema } from "./db";
 import { healthRouter } from "./routes/health";
 import { jobsRouter } from "./routes/jobs";
 import { generateRouter } from "./routes/generate";
@@ -23,6 +22,4 @@ app.use(healthRouter);
 app.use(generateRouter);
 app.use(jobsRouter);
 
-const schemaReady = initSchema();
-
-export { app, schemaReady };
+export { app };

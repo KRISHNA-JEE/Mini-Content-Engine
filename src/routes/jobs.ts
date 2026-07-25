@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pool } from "../db";
+import { pool, ensureSchema } from "../db";
 import { Job } from "../types";
 
 export const jobsRouter = Router();
@@ -20,11 +20,27 @@ export function serializeJob(job: Job) {
 }
 
 jobsRouter.get("/jobs", async (_req, res) => {
+  try {
+    await ensureSchema();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Database schema initialization failed";
+    res.status(503).json({ error: message });
+    return;
+  }
+
   const result = await pool.query<Job>("SELECT * FROM jobs ORDER BY created_at DESC LIMIT 100");
   res.json(result.rows.map(serializeJob));
 });
 
 jobsRouter.get("/jobs/:id", async (req, res) => {
+  try {
+    await ensureSchema();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Database schema initialization failed";
+    res.status(503).json({ error: message });
+    return;
+  }
+
   const result = await pool.query<Job>("SELECT * FROM jobs WHERE id = $1", [req.params.id]);
 
   if (result.rows.length === 0) {

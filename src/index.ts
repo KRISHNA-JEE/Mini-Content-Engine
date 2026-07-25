@@ -1,8 +1,9 @@
-import { app, schemaReady } from "./app";
+import { app } from "./app";
+import { ensureSchema } from "./db";
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 async function start() {
-  await schemaReady;
+  await ensureSchema();
   app.listen(PORT, () => {
     console.log(`Mini Content Engine listening on port ${PORT}`);
   });

@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import { randomUUID } from "crypto";
 import { pool } from "../db";
+import { ensureSchema } from "../db";
 import { downloadImage } from "../services/imageGen";
 import { processJob } from "../services/jobProcessor";
 import { persistImageAsset } from "../services/assetStorage";
@@ -21,6 +22,14 @@ const EXT_BY_CONTENT_TYPE: Record<string, string> = {
 export const generateRouter = Router();
 
 generateRouter.post("/generate", upload.single("productImage"), async (req, res) => {
+  try {
+    await ensureSchema();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Database schema initialization failed";
+    res.status(503).json({ error: message });
+    return;
+  }
+
   const productName = (req.body?.productName ?? "").toString().trim();
   const description = (req.body?.description ?? "").toString().trim();
   const productImageUrl = (req.body?.productImageUrl ?? "").toString().trim();
