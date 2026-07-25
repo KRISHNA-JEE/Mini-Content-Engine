@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mini-content-engine
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SSL
+        value: "true"
+      - key: PORT
+        value: "3000"

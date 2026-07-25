@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "functions": {
+    "api/[...path].ts": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/generate", "destination": "/api/generate" },
+    { "source": "/jobs", "destination": "/api/jobs" },
+    { "source": "/jobs/:path*", "destination": "/api/jobs/:path*" }
+  ]
+}

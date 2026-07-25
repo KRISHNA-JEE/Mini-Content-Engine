@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Content Engine</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Mini Content Engine</h1>
+    <p class="subtitle">Product info in, AI-generated creative out.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>New Job</h2>
+      <form id="generate-form">
+        <label>
+          Product name
+          <input type="text" name="productName" placeholder="Florentine Wooden Salad Bowl" required />
+        </label>
+
+        <label>
+          Short description
+          <textarea name="description" rows="3" placeholder="A match made in summer - salads and wooden bowls..." required></textarea>
+        </label>
+
+        <label>
+          Product image URL <span class="hint">(or upload a file below)</span>
+          <input type="url" name="productImageUrl" placeholder="https://example.com/product.jpg" />
+        </label>
+
+        <label>
+          Or upload product image
+          <input type="file" name="productImage" accept="image/*" />
+        </label>
+
+        <button type="submit">Generate</button>
+        <span id="form-status" class="hint"></span>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Jobs</h2>
+      <table id="jobs-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="jobs-tbody"></tbody>
+      </table>
+    </section>
+
+    <section class="card" id="detail-card" hidden>
+      <h2>Job Detail</h2>
+      <div id="detail-content"></div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
