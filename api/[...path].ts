@@ -1,6 +1,5 @@
 import serverless from "serverless-http";
 import { app } from "../src/app";
-import { ensureSchema } from "../src/db";
 
 const handler = serverless(app);
 
@@ -13,7 +12,6 @@ export default async function vercelHandler(req: any, res: any) {
       return;
     }
 
-    await ensureSchema();
     return handler(req, res);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown Vercel runtime error";
