@@ -15,14 +15,42 @@ function formatDate(iso) {
   return new Date(iso).toLocaleString();
 }
 
-async function fetchJobs() {
-  const res = await fetch("/jobs");
-  const jobs = await res.json();
-  renderJobsTable(jobs);
+function getErrorMessage(err) {
+  return err instanceof Error ? err.message : String(err);
+}
 
-  if (selectedJobId) {
-    const current = jobs.find((j) => j.id === selectedJobId);
-    if (current) renderDetail(current);
+async function readJsonResponse(res) {
+  const text = await res.text();
+
+  if (!text) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { error: text };
+  }
+}
+
+async function fetchJobs() {
+  try {
+    const res = await fetch("/jobs");
+    const data = await readJsonResponse(res);
+
+    if (!res.ok) {
+      throw new Error(data?.error || `Failed to load jobs (${res.status})`);
+    }
+
+    const jobs = Array.isArray(data) ? data : [];
+    renderJobsTable(jobs);
+
+    if (selectedJobId) {
+      const current = jobs.find((j) => j.id === selectedJobId);
+      if (current) renderDetail(current);
+    }
+  } catch (err) {
+    formStatus.textContent = `Jobs unavailable: ${getErrorMessage(err)}`;
   }
 }
 
@@ -95,10 +123,10 @@ form.addEventListener("submit", async (e) => {
   try {
     const formData = new FormData(form);
     const res = await fetch("/generate", { method: "POST", body: formData });
-    const data = await res.json();
+    const data = await readJsonResponse(res);
 
     if (!res.ok) {
-      throw new Error(data.error || "Request failed");
+      throw new Error(data?.error || "Request failed");
     }
 
     formStatus.textContent = `Job ${data.id} submitted.`;
@@ -106,7 +134,7 @@ form.addEventListener("submit", async (e) => {
     selectedJobId = data.id;
     await fetchJobs();
   } catch (err) {
-    formStatus.textContent = `Error: ${err.message}`;
+    formStatus.textContent = `Error: ${getErrorMessage(err)}`;
   } finally {
     submitButton.disabled = false;
   }

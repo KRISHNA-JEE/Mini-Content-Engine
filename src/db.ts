@@ -14,6 +14,7 @@ export function getDatabaseConfig(): { connectionString: string; ssl: false | { 
 
 export const pool = new Pool({
   ...getDatabaseConfig(),
+  connectionTimeoutMillis: 5000,
 });
 
 const SCHEMA_SQL = `
