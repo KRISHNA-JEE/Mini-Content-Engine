@@ -5,9 +5,15 @@ if (!connectionString) {
   throw new Error("DATABASE_URL environment variable is required");
 }
 
+export function getDatabaseConfig(): { connectionString: string; ssl: false | { rejectUnauthorized: boolean } } {
+  return {
+    connectionString: connectionString as string,
+    ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+  };
+}
+
 export const pool = new Pool({
-  connectionString,
-  ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
+  ...getDatabaseConfig(),
 });
 
 const SCHEMA_SQL = `
